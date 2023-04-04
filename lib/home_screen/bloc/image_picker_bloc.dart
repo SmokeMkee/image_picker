@@ -42,6 +42,7 @@ class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
       }
       emit(ImagePickerData(listImages: images));
     } catch (e) {
+      print(e);
       emit(ImagePickerError(error: 'Что-то пошло не так'));
     }
   }

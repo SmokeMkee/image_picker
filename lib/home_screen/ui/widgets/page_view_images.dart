@@ -73,6 +73,7 @@ class _PageViewImagesState extends State<PageViewImages> {
               },
             ),
           ),
+          const SizedBox(height: 15),
           if (widget.images.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -80,10 +81,12 @@ class _PageViewImagesState extends State<PageViewImages> {
                 IconButton(
                   color: Colors.blue.withOpacity(0.7),
                   onPressed: () {
-                    _pageController.previousPage(
+                    if(currentIndex > 0) {
+                      _pageController.previousPage(
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeIn,
                     );
+                    }
                   },
                   icon: const Icon(
                     Icons.arrow_circle_left,
@@ -94,10 +97,12 @@ class _PageViewImagesState extends State<PageViewImages> {
                 IconButton(
                   color: Colors.blue.withOpacity(0.7),
                   onPressed: () {
-                    _pageController.nextPage(
+                    if(currentIndex < widget.images.length) {
+                      _pageController.nextPage(
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeIn,
                     );
+                    }
                   },
                   icon: const Icon(
                     Icons.arrow_circle_right,

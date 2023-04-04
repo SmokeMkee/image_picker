@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 void showTappedImage({
@@ -40,15 +41,8 @@ void showTappedImage({
             ),
             const SizedBox(height: 10),
             Flexible(
-              child: InteractiveViewer(
-                minScale: 1,
-                panEnabled: false,
-                maxScale: 4,
-                clipBehavior: Clip.none,
-                child: Image.file(
-                  file,
-                  fit: BoxFit.contain,
-                ),
+              child: ImageZoom(
+                file: file,
               ),
             ),
           ],
@@ -56,4 +50,56 @@ void showTappedImage({
       );
     },
   );
+}
+
+class ImageZoom extends StatefulWidget {
+  const ImageZoom({Key? key, required this.file}) : super(key: key);
+  final File file;
+
+  @override
+  State<ImageZoom> createState() => _ImageZoomState();
+}
+
+class _ImageZoomState extends State<ImageZoom> with SingleTickerProviderStateMixin {
+  late TransformationController controller;
+  late AnimationController animationController;
+  Animation<Matrix4>? animation;
+
+  @override
+  void initState() {
+    controller = TransformationController();
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200))
+      ..addListener(() {
+        controller.value == animation!.value;
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InteractiveViewer(
+      minScale: 1,
+      transformationController: controller,
+      panEnabled: false,
+      maxScale: 4,
+      onInteractionEnd: (details) {
+        controller.value = Matrix4.identity();
+      },
+      clipBehavior: Clip.none,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Image.file(
+          widget.file,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
 }
