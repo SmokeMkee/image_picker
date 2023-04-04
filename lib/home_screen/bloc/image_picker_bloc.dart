@@ -7,10 +7,6 @@ import 'package:image_picker/image_picker.dart';
 
 part 'image_picker_event.dart';
 
-part 'parts/delete_image.dart';
-
-part 'parts/pick_image.dart';
-
 part 'image_picker_state.dart';
 
 class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
@@ -20,5 +16,33 @@ class ImagePickerBloc extends Bloc<ImagePickerEvent, ImagePickerState> {
   ImagePickerBloc() : super(ImagePickerInitial()) {
     on<PickImage>(_pickImage, transformer: droppable());
     on<DeleteImage>(_deleteImage, transformer: droppable());
+  }
+
+  Future<void> _deleteImage(
+    DeleteImage event,
+    Emitter<ImagePickerState> emit,
+  ) async {
+    try {
+      images.removeAt(event.selectedId);
+      emit(ImagePickerData(listImages: images));
+    } catch (e) {
+      emit(ImagePickerError(error: 'Что-то пошло не так'));
+    }
+  }
+
+  Future<void> _pickImage(
+    ImagePickerEvent event,
+    Emitter<ImagePickerState> emit,
+  ) async {
+    try {
+      final pickedFile =
+          await imagePicker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        images.add(File(pickedFile.path));
+      }
+      emit(ImagePickerData(listImages: images));
+    } catch (e) {
+      emit(ImagePickerError(error: 'Что-то пошло не так'));
+    }
   }
 }

@@ -4,8 +4,6 @@ abstract class ImagePickerState {}
 
 class ImagePickerInitial extends ImagePickerState {}
 
-class ImagePickerLoading extends ImagePickerState {}
-
 class ImagePickerData extends ImagePickerState {
   final List<File> listImages;
 

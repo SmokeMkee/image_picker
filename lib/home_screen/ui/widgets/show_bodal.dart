@@ -38,8 +38,19 @@ void showTappedImage({
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            Image.file(file),
+            const SizedBox(height: 10),
+            Flexible(
+              child: InteractiveViewer(
+                minScale: 1,
+                panEnabled: false,
+                maxScale: 4,
+                clipBehavior: Clip.none,
+                child: Image.file(
+                  file,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
           ],
         ),
       );

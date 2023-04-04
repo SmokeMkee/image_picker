@@ -16,7 +16,7 @@ class PageViewImages extends StatefulWidget {
 
 class _PageViewImagesState extends State<PageViewImages> {
   final PageController _pageController =
-      PageController(initialPage: 0, viewportFraction: 0.8);
+      PageController(initialPage: 0, viewportFraction: 0.76);
 
   @override
   void dispose() {
@@ -28,19 +28,19 @@ class _PageViewImagesState extends State<PageViewImages> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Flexible(
-          child: PageView.builder(
-            onPageChanged: (page) => setState(() => currentIndex = page),
-            itemCount: widget.images.length,
-            controller: _pageController,
-            itemBuilder: (context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: GestureDetector(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 350,
+            child: PageView.builder(
+              onPageChanged: (page) => setState(() => currentIndex = page),
+              itemCount: widget.images.length,
+              controller: _pageController,
+              itemBuilder: (context, int index) {
+                var scale = currentIndex == index ? 1.0 : 0.8;
+                return GestureDetector(
                   onTap: () => showTappedImage(
                     context: context,
                     file: widget.images[index],
@@ -51,33 +51,63 @@ class _PageViewImagesState extends State<PageViewImages> {
                       Navigator.pop(context);
                     },
                   ),
-                  child: Image.file(
-                    widget.images[index],
-                    fit: BoxFit.contain,
+                  child: TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 350),
+                    tween: Tween(begin: scale, end: scale),
+                    builder:
+                        (BuildContext context, double value, Widget? child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(26),
+                      child: Image.file(
+                        widget.images[index],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (widget.images.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  color: Colors.blue.withOpacity(0.7),
+                  onPressed: () {
+                    _pageController.previousPage(
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.easeIn,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.arrow_circle_left,
+                    size: 35,
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        Flexible(
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: widget.images.length,
-            itemBuilder: (context, int index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor:
-                      currentIndex == index ? Colors.black : Colors.grey,
-                ),
-              );
-            },
-          ),
-        )
-      ],
+                const SizedBox(width: 20),
+                IconButton(
+                  color: Colors.blue.withOpacity(0.7),
+                  onPressed: () {
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.easeIn,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.arrow_circle_right,
+                    size: 35,
+                  ),
+                )
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

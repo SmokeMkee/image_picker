@@ -12,20 +12,28 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8)
+          ),
+          backgroundColor: Colors.blue.withOpacity(0.3)
+        ),
         onPressed: () {
           context.read<ImagePickerBloc>().add(PickImage());
         },
-        child: const Text('Choose image'),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(vertical: 12),
+          child: Text('Choose image'),
+        ),
       ),
       appBar: AppBar(
-        title: const Text('Image Picker'),
+        title: const Text('My Image Picker'),
         centerTitle: true,
+        elevation: 4,
+        backgroundColor: Colors.blue.withOpacity(0.3),
       ),
       body: BlocBuilder<ImagePickerBloc, ImagePickerState>(
         builder: (context, state) {
-          if (state is ImagePickerLoading) {
-            return const CircularProgressIndicator();
-          }
           if (state is ImagePickerData) {
             return state.listImages.isEmpty
                 ? const EmptyWidget()
