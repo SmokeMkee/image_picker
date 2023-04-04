@@ -60,25 +60,15 @@ class ImageZoom extends StatefulWidget {
   State<ImageZoom> createState() => _ImageZoomState();
 }
 
-class _ImageZoomState extends State<ImageZoom> with SingleTickerProviderStateMixin {
-  late TransformationController controller;
-  late AnimationController animationController;
+class _ImageZoomState extends State<ImageZoom>  {
+  TransformationController controller = TransformationController();
   Animation<Matrix4>? animation;
 
-  @override
-  void initState() {
-    controller = TransformationController();
-    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200))
-      ..addListener(() {
-        controller.value == animation!.value;
-      });
-    super.initState();
-  }
+
 
   @override
   void dispose() {
     controller.dispose();
-    animationController.dispose();
     super.dispose();
   }
 
