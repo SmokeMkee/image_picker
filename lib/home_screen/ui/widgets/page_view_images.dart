@@ -97,7 +97,7 @@ class _PageViewImagesState extends State<PageViewImages> {
                 IconButton(
                   color: Colors.blue.withOpacity(0.7),
                   onPressed: () {
-                    if(currentIndex < widget.images.length) {
+                    if(currentIndex < widget.images.length-1) {
                       _pageController.nextPage(
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeIn,
